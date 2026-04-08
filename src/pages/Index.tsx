@@ -1,546 +1,434 @@
-import { useState, useEffect, useRef } from "react";
-import Icon from "@/components/ui/icon";
+import { useState, useEffect } from "react";
 
-const HERO_IMAGE = "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/ebb5d308-5e35-4bf2-9415-c604088a5dad.jpg";
+type TabKey = "lash" | "brow" | "face";
 
-const services = [
-  {
-    icon: "Scan",
-    title: "Диагностика кожи",
-    desc: "Профессиональный анализ состояния кожи перед каждым визитом. Подбираем процедуры индивидуально под ваши задачи.",
-    tag: "Основа ухода",
-  },
-  {
-    icon: "Sparkles",
-    title: "Чистка и пилинги",
-    desc: "Ручная и аппаратная чистка, химические пилинги разной глубины. Восстанавливаем чистоту и сияние кожи.",
-    tag: "Популярное",
-  },
-  {
-    icon: "Droplets",
-    title: "Увлажнение и питание",
-    desc: "Биоревитализация, мезотерапия, маски. Интенсивное восполнение влаги и питательных веществ.",
-    tag: "Антивозраст",
-  },
-  {
-    icon: "Zap",
-    title: "Аппаратные методики",
-    desc: "Лазерные процедуры, RF-лифтинг, микротоки. Современное оборудование для видимого результата.",
-    tag: "Технологии",
-  },
-  {
-    icon: "Heart",
-    title: "Релакс-уход",
-    desc: "Массажные техники и spa-протоколы для лица. Снимаем напряжение, улучшаем контуры и цвет кожи.",
-    tag: "Антистресс",
-  },
-  {
-    icon: "Star",
-    title: "Авторские протоколы",
-    desc: "Комплексные программы, составленные под конкретные запросы. Курсовая работа с измеримым результатом.",
-    tag: "Эксклюзив",
-  },
-];
+const SERVICES: Record<TabKey, { tag: string; name: string; result: string; resultBold: string; price: string; priceSub?: string }[]> = {
+  lash: [
+    { tag: "Хит продаж", name: "Наращивание ресниц", result: "Классика, 2D/3D, голливудский объём. ", resultBold: "Выразительный взгляд 24/7 без туши — до 3–4 недель.", price: "от 2 500 ₽", priceSub: "в зависимости от техники" },
+    { tag: "Натуральность", name: "Ламинирование ресниц", result: "Стойкий изгиб и объём родных ресниц. ", resultBold: "Красота без наращивания на 4–6 недель.", price: "от 1 800 ₽", priceSub: "включая уход" },
+    { tag: "Уход", name: "Ботокс для ресниц", result: "Восстановление и питание изнутри. ", resultBold: "Живые, блестящие, плотные ресницы.", price: "от 1 500 ₽", priceSub: "рекомендуется курс" },
+    { tag: "Быстро", name: "Окрашивание ресниц", result: "Насыщенный стойкий цвет. ", resultBold: "Выразительность без туши — до 3 недель.", price: "от 800 ₽" },
+  ],
+  brow: [
+    { tag: "Трансформация", name: "Архитектура бровей", result: "Форма, которая меняет лицо. ", resultBold: "Лицо выглядит моложе и выразительнее без грамма макияжа.", price: "от 1 200 ₽" },
+    { tag: "Популярно", name: "Долговременная укладка", result: "Идеальные брови с утра до вечера. ", resultBold: "Ухоженный вид на 4–6 недель.", price: "от 2 000 ₽" },
+    { tag: "Регулярно", name: "Коррекция + окрашивание", result: "Чёткая форма и насыщенный цвет. ", resultBold: "Результат без карандаша на 3 недели.", price: "от 1 000 ₽" },
+  ],
+  face: [
+    { tag: "Без реабилитации", name: "Гидропилинг", result: "Глубокое очищение без боли и покраснений. ", resultBold: "Кожа как после отпуска — сразу после процедуры.", price: "от 3 500 ₽" },
+    { tag: "Лифтинг", name: "Скульптурный массаж", result: "Лифтинг без игл. ", resultBold: "Чёткий овал, снятие отёков — уже после первой процедуры.", price: "от 3 000 ₽" },
+    { tag: "Увлажнение", name: "Безынъекционная мезотерапия", result: "Гидратация в глубокие слои кожи. ", resultBold: "Эффект «напилась воды изнутри».", price: "от 2 500 ₽" },
+    { tag: "Сияние", name: "Химический пилинг", result: "AHA/BHA. Выравнивание текстуры и тона кожи. ", resultBold: "Ровный цвет, сужение пор, сияние.", price: "от 2 000 ₽" },
+    { tag: "Микротоки", name: "Аппаратный лифтинг", result: "Моделирование овала лица без инъекций. ", resultBold: "Видимый результат уже после первого сеанса.", price: "от 2 500 ₽" },
+  ],
+};
 
-const prices = [
-  {
-    title: "Старт",
-    subtitle: "Для знакомства",
-    price: "от 2 500 ₽",
-    featured: false,
-    items: ["Консультация мастера", "Диагностика кожи", "Экспресс-уход", "Рекомендации домой"],
-  },
-  {
-    title: "Комплекс",
-    subtitle: "Самый популярный",
-    price: "от 5 900 ₽",
-    featured: true,
-    items: ["Диагностика + анализ", "Чистка лица", "Пилинг или маска", "Массаж лица", "Рекомендации и уход домой"],
-  },
-  {
-    title: "Премиум",
-    subtitle: "Максимальный результат",
-    price: "от 12 000 ₽",
-    featured: false,
-    items: ["Полная диагностика", "Аппаратная методика", "Авторский протокол", "Курс ухода домой", "Контроль через 2 нед."],
-  },
-];
-
-const reviews = [
-  {
-    name: "Анастасия М.",
-    date: "Март 2024",
-    text: "Впервые за долгое время моя кожа выглядит живой. Диагностика перед процедурой — это то, чего не хватало везде раньше. Мастер объяснила каждый шаг.",
-    stars: 5,
-  },
-  {
-    name: "Екатерина Р.",
-    date: "Февраль 2024",
-    text: "Пришла по рекомендации подруги. Атмосфера уютная и спокойная, никаких навязчивых продаж. Бесплатная консультация по уходу дома — отдельное спасибо!",
-    stars: 5,
-  },
-  {
-    name: "Марина В.",
-    date: "Январь 2024",
-    text: "Первый визит с диагностикой в подарок — очень приятный жест. После курса из 4 процедур кожа стала значительно ровнее. Продолжаю ходить каждый месяц.",
-    stars: 5,
-  },
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "lash", label: "👁 Ресницы" },
+  { key: "brow", label: "🌿 Брови" },
+  { key: "face", label: "✨ Уход за лицом" },
 ];
 
 export default function Index() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [activeTab, setActiveTab] = useState<TabKey>("lash");
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initial = prefersDark ? "dark" : "light";
+    setTheme(initial);
+    document.documentElement.setAttribute("data-theme", initial);
   }, []);
 
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.setAttribute("data-theme", next);
+  };
+
   const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--dark-bg)", color: "hsl(40 20% 88%)" }}>
-
+    <>
       {/* NAV */}
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-        style={{
-          backgroundColor: scrolled ? "rgba(15, 13, 11, 0.95)" : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          borderBottom: scrolled ? "1px solid hsl(30 15% 16%)" : "none",
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-          <div className="font-display text-xl tracking-widest" style={{ color: "var(--gold)" }}>
-            LUMIÈRE
-          </div>
-
-          <div className="hidden md:flex items-center gap-10">
-            {[["hero", "Главная"], ["services", "Услуги"], ["prices", "Цены"], ["reviews", "Отзывы"], ["contacts", "Контакты"]].map(([id, label]) => (
-              <button key={id} onClick={() => scrollTo(id)} className="nav-link">
-                {label}
-              </button>
-            ))}
-          </div>
-
-          <button className="btn-gold hidden md:block" onClick={() => scrollTo("contacts")}>
-            Записаться
-          </button>
-
-          <button
-            className="md:hidden p-2"
-            style={{ color: "var(--gold)" }}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <Icon name={menuOpen ? "X" : "Menu"} size={22} />
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div
-            className="md:hidden px-6 pb-6 pt-2 flex flex-col gap-5"
-            style={{ backgroundColor: "rgba(15, 13, 11, 0.98)" }}
-          >
-            {[["hero", "Главная"], ["services", "Услуги"], ["prices", "Цены"], ["reviews", "Отзывы"], ["contacts", "Контакты"]].map(([id, label]) => (
-              <button key={id} onClick={() => scrollTo(id)} className="nav-link text-left">
-                {label}
-              </button>
-            ))}
-            <button className="btn-gold mt-2" onClick={() => scrollTo("contacts")}>
-              Записаться
+      <nav className="nav">
+        <div className="nav__inner">
+          <a href="#" className="nav__logo" onClick={(e) => { e.preventDefault(); scrollTo("hero"); }}>
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="18" cy="18" r="17" stroke="currentColor" strokeWidth="1"/>
+              <path d="M10 14 Q18 8 26 14 Q26 22 18 27 Q10 22 10 14Z" stroke="currentColor" strokeWidth="1" fill="none"/>
+              <circle cx="18" cy="17" r="3.5" stroke="currentColor" strokeWidth="1" fill="none"/>
+              <line x1="18" y1="8" x2="18" y2="6" stroke="currentColor" strokeWidth="1"/>
+              <line x1="24" y1="10" x2="25.5" y2="8.5" stroke="currentColor" strokeWidth="1"/>
+              <line x1="12" y1="10" x2="10.5" y2="8.5" stroke="currentColor" strokeWidth="1"/>
+            </svg>
+            <div>
+              <div className="nav__logo-text">Портрет</div>
+              <div className="nav__tagline">Студия эстетики</div>
+            </div>
+          </a>
+          <div className="nav__actions">
+            <a href="tel:+74232000000" className="nav__phone">+7 (423) 200-00-00</a>
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Переключить тему">
+              {theme === "dark" ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              )}
             </button>
+            <button className="btn-nav" onClick={() => scrollTo("cta")}>Записаться</button>
           </div>
-        )}
+        </div>
       </nav>
 
-      {/* HERO */}
-      <section id="hero" ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={HERO_IMAGE}
-            alt="Студия красоты"
-            className="w-full h-full object-cover"
-            style={{ opacity: 0.35 }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(135deg, rgba(15,13,11,0.95) 0%, rgba(15,13,11,0.6) 50%, rgba(15,13,11,0.85) 100%)",
-            }}
-          />
-        </div>
-
-        <div
-          className="absolute top-1/4 right-0 w-96 h-96 rounded-full opacity-10"
-          style={{
-            background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
-        <div
-          className="absolute bottom-1/4 left-10 w-64 h-64 rounded-full opacity-8"
-          style={{
-            background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)",
-            filter: "blur(60px)",
-          }}
-        />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-32">
-          <div className="max-w-2xl">
-            <div className="section-label mb-8 animate-fade-up delay-100" style={{ animationFillMode: "forwards" }}>
-              Студия красоты
-              <span className="ornament">✦</span>
-              Персональный уход
-            </div>
-
-            <h1
-              className="font-display animate-fade-up delay-200 mb-8"
-              style={{
-                fontSize: "clamp(3rem, 8vw, 6rem)",
-                lineHeight: "1.05",
-                fontWeight: 300,
-                letterSpacing: "-0.02em",
-                animationFillMode: "forwards",
-              }}
-            >
-              Ваша кожа
-              <br />
-              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>заслуживает</em>
-              <br />
-              лучшего
-            </h1>
-
-            <p
-              className="animate-fade-up delay-300 mb-12 leading-relaxed"
-              style={{
-                fontSize: "1.05rem",
-                color: "hsl(40 15% 68%)",
-                maxWidth: "480px",
-                animationFillMode: "forwards",
-              }}
-            >
-              Персональная диагностика кожи и подбор процедур перед каждым визитом. Никаких шаблонов — только ваш индивидуальный результат.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-up delay-400" style={{ animationFillMode: "forwards" }}>
-              <button className="btn-gold" onClick={() => scrollTo("contacts")}>
-                Записаться на диагностику
-              </button>
-              <button className="btn-outline" onClick={() => scrollTo("services")}>
-                Наши услуги
-              </button>
-            </div>
-          </div>
-
-          <div
-            className="absolute bottom-16 right-6 md:right-16 animate-fade-up delay-500"
-            style={{
-              animationFillMode: "forwards",
-              border: "1px solid var(--gold)",
-              padding: "1.5rem",
-              maxWidth: "220px",
-              backgroundColor: "rgba(15,13,11,0.85)",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            <div className="section-label mb-2" style={{ fontSize: "0.6rem" }}>Спецпредложение</div>
-            <p className="font-display text-lg" style={{ color: "var(--gold-light)", lineHeight: 1.3 }}>
-              Первый визит — диагностика в подарок
-            </p>
-          </div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" style={{ color: "var(--gold)", opacity: 0.5 }}>
-          <span style={{ fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase" }}>Далее</span>
-          <Icon name="ChevronDown" size={16} />
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section style={{ backgroundColor: "var(--dark-surface)", borderTop: "1px solid hsl(30 15% 16%)", borderBottom: "1px solid hsl(30 15% 16%)" }}>
-        <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-0">
-          {[
-            { icon: "Scan", title: "Диагностика кожи", desc: "Перед каждым визитом — индивидуальный анализ состояния кожи и подбор процедур" },
-            { icon: "MessageCircle", title: "Бесплатная консультация", desc: "Мастер расскажет, как ухаживать за кожей дома, и даст конкретные рекомендации" },
-            { icon: "Gift", title: "Подарок при первом визите", desc: "Диагностика кожи в подарок при записи на первую процедуру" },
-          ].map((f, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center text-center p-10"
-              style={{ borderRight: i < 2 ? "1px solid hsl(30 15% 16%)" : "none" }}
-            >
-              <div
-                className="w-12 h-12 flex items-center justify-center mb-5 rounded-full"
-                style={{ border: "1px solid var(--gold)", color: "var(--gold)" }}
-              >
-                <Icon name={f.icon} size={20} />
-              </div>
-              <h3 className="font-display text-xl mb-3" style={{ fontWeight: 400 }}>{f.title}</h3>
-              <p style={{ color: "hsl(40 10% 58%)", fontSize: "0.9rem", lineHeight: 1.7 }}>{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* SERVICES */}
-      <section id="services" className="max-w-6xl mx-auto px-6 py-28">
-        <div className="text-center mb-20">
-          <div className="section-label mb-5">Что мы делаем</div>
-          <h2 className="font-display text-5xl md:text-6xl mb-6" style={{ fontWeight: 300 }}>
-            Услуги студии
-          </h2>
-          <div className="divider-gold"></div>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map((s, i) => (
-            <div key={i} className="service-card p-8">
-              <div className="flex items-start justify-between mb-6">
-                <div
-                  className="w-10 h-10 flex items-center justify-center"
-                  style={{ color: "var(--gold)", border: "1px solid hsl(38 30% 28%)" }}
-                >
-                  <Icon name={s.icon} size={18} />
-                </div>
-                <span
-                  style={{
-                    fontSize: "0.6rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "var(--gold)",
-                    opacity: 0.7,
-                    border: "1px solid hsl(38 30% 22%)",
-                    padding: "0.2rem 0.6rem",
-                  }}
-                >
-                  {s.tag}
-                </span>
-              </div>
-              <h3 className="font-display text-2xl mb-3" style={{ fontWeight: 400 }}>{s.title}</h3>
-              <p style={{ color: "hsl(40 10% 58%)", fontSize: "0.9rem", lineHeight: 1.7 }}>{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* PRICES */}
-      <section
-        id="prices"
-        style={{ backgroundColor: "var(--dark-surface)", borderTop: "1px solid hsl(30 15% 16%)", borderBottom: "1px solid hsl(30 15% 16%)" }}
-      >
-        <div className="max-w-6xl mx-auto px-6 py-28">
-          <div className="text-center mb-20">
-            <div className="section-label mb-5">Стоимость</div>
-            <h2 className="font-display text-5xl md:text-6xl mb-6" style={{ fontWeight: 300 }}>
-              Цены
-            </h2>
-            <div className="divider-gold"></div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {prices.map((p, i) => (
-              <div key={i} className={`price-card p-10 ${p.featured ? "featured" : ""} flex flex-col`}>
-                {p.featured && (
-                  <div className="section-label mb-4 text-center" style={{ color: "var(--gold)", fontSize: "0.6rem" }}>
-                    ✦ Рекомендуем ✦
-                  </div>
-                )}
-                <div className="mb-2 section-label" style={{ color: p.featured ? "var(--gold)" : "hsl(40 10% 50%)" }}>
-                  {p.subtitle}
-                </div>
-                <h3 className="font-display text-3xl mb-2" style={{ fontWeight: 400 }}>{p.title}</h3>
-                <div className="font-display text-4xl mb-8" style={{ color: "var(--gold)", fontWeight: 300 }}>
-                  {p.price}
-                </div>
-                <div className="divider-gold mb-8" style={{ marginLeft: 0 }}></div>
-                <ul className="flex flex-col gap-3 mb-10 flex-1">
-                  {p.items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-3">
-                      <Icon name="Check" size={14} />
-                      <span style={{ color: "hsl(40 10% 65%)", fontSize: "0.9rem" }}>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className={p.featured ? "btn-gold" : "btn-outline"}
-                  onClick={() => document.getElementById("contacts")?.scrollIntoView({ behavior: "smooth" })}
-                >
-                  Записаться
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-center mt-10" style={{ color: "hsl(40 10% 45%)", fontSize: "0.8rem" }}>
-            Точная стоимость рассчитывается после консультации. Все процедуры проводятся после диагностики кожи.
-          </p>
-        </div>
-      </section>
-
-      {/* REVIEWS */}
-      <section id="reviews" className="max-w-6xl mx-auto px-6 py-28">
-        <div className="text-center mb-20">
-          <div className="section-label mb-5">Мнения клиентов</div>
-          <h2 className="font-display text-5xl md:text-6xl mb-6" style={{ fontWeight: 300 }}>
-            Отзывы
-          </h2>
-          <div className="divider-gold"></div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-5">
-          {reviews.map((r, i) => (
-            <div key={i} className="review-card p-8">
-              <div className="flex gap-1 mb-5">
-                {Array.from({ length: r.stars }).map((_, j) => (
-                  <span key={j} style={{ color: "var(--gold)", fontSize: "0.75rem" }}>★</span>
-                ))}
-              </div>
-              <p className="mb-8 leading-relaxed" style={{ color: "hsl(40 15% 68%)", fontSize: "0.95rem", fontStyle: "italic" }}>
-                «{r.text}»
-              </p>
-              <div style={{ borderTop: "1px solid hsl(30 15% 18%)", paddingTop: "1.25rem" }}>
-                <div style={{ fontWeight: 500, fontSize: "0.9rem" }}>{r.name}</div>
-                <div style={{ color: "hsl(40 10% 45%)", fontSize: "0.75rem", marginTop: "0.25rem" }}>{r.date}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CONTACTS */}
-      <section
-        id="contacts"
-        style={{ backgroundColor: "var(--dark-surface)", borderTop: "1px solid hsl(30 15% 16%)" }}
-      >
-        <div className="max-w-6xl mx-auto px-6 py-28">
-          <div className="text-center mb-20">
-            <div className="section-label mb-5">Свяжитесь с нами</div>
-            <h2 className="font-display text-5xl md:text-6xl mb-6" style={{ fontWeight: 300 }}>
-              Записаться
-            </h2>
-            <div className="divider-gold"></div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-16 max-w-4xl mx-auto">
+      <main id="hero">
+        {/* HERO */}
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero__bg" aria-hidden="true"></div>
+          <div className="hero__content">
             <div>
-              <p className="mb-8" style={{ color: "hsl(40 10% 58%)", lineHeight: 1.8 }}>
-                Оставьте свои данные, и мы свяжемся с вами в течение часа, чтобы подобрать удобное время.
-              </p>
-              <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="text"
-                  placeholder="Ваше имя"
-                  className="w-full px-4 py-3 outline-none transition-all duration-300"
-                  style={{
-                    backgroundColor: "var(--dark-card)",
-                    border: "1px solid hsl(30 15% 20%)",
-                    color: "hsl(40 20% 88%)",
-                    fontSize: "0.9rem",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                  onBlur={(e) => (e.target.style.borderColor = "hsl(30 15% 20%)")}
-                />
-                <input
-                  type="tel"
-                  placeholder="Телефон"
-                  className="w-full px-4 py-3 outline-none transition-all duration-300"
-                  style={{
-                    backgroundColor: "var(--dark-card)",
-                    border: "1px solid hsl(30 15% 20%)",
-                    color: "hsl(40 20% 88%)",
-                    fontSize: "0.9rem",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                  onBlur={(e) => (e.target.style.borderColor = "hsl(30 15% 20%)")}
-                />
-                <textarea
-                  placeholder="Расскажите о своём запросе (необязательно)"
-                  rows={4}
-                  className="w-full px-4 py-3 outline-none resize-none transition-all duration-300"
-                  style={{
-                    backgroundColor: "var(--dark-card)",
-                    border: "1px solid hsl(30 15% 20%)",
-                    color: "hsl(40 20% 88%)",
-                    fontSize: "0.9rem",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                  onBlur={(e) => (e.target.style.borderColor = "hsl(30 15% 20%)")}
-                />
-                <button type="submit" className="btn-gold mt-2">
-                  Отправить заявку
+              <p className="hero__eyebrow">Студия эстетики · Владивосток</p>
+              <h1 className="hero__title" id="hero-title">
+                Ты просыпаешься<br/>
+                <em>красивой.</em><br/>
+                Каждый день.
+              </h1>
+              <p className="hero__subtitle">Без макияжа. Без лишних усилий. Наращивание ресниц, оформление бровей и уходовые процедуры, после которых хочется смотреться в зеркало.</p>
+              <div className="hero__cta-group">
+                <button className="btn-primary" onClick={() => scrollTo("cta")}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  Записаться онлайн
                 </button>
-              </form>
+                <button className="btn-secondary" onClick={() => scrollTo("services")}>Смотреть услуги</button>
+              </div>
+              <p className="hero__note">Ответим в течение 15 минут · Работаем по записи пн–вс 9:00–21:00</p>
             </div>
+            <div>
+              <div className="hero__image-wrap">
+                <img src="https://picsum.photos/seed/beauty-portrait/600/750" alt="Студия Портрет — красота и уход" width="600" height="750" loading="eager"/>
+                <div className="hero__badge">
+                  <span className="hero__badge-icon">⭐</span>
+                  <div className="hero__badge-text">
+                    <strong>4.9 / 5.0</strong>
+                    Яндекс.Карты · 2ГИС
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <div className="flex flex-col gap-10">
-              <div>
-                <div className="section-label mb-4">Контакты</div>
-                <div className="flex flex-col gap-4">
+        {/* STATS BAR */}
+        <div className="stats-bar fade-in">
+          <div className="container">
+            <div className="stats-bar__grid">
+              {[
+                { num: "500+", label: "Довольных клиенток" },
+                { num: "5+", label: "Лет в профессии" },
+                { num: "12", label: "Видов процедур" },
+                { num: "100%", label: "Безопасные материалы" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <div className="stat__number">{s.num}</div>
+                  <div className="stat__label">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* PAIN BLOCK */}
+        <section className="pain-block section" aria-labelledby="pain-title">
+          <div className="container">
+            <div className="section-header fade-in">
+              <p className="section-eyebrow">Тебе знакомо?</p>
+              <h2 className="section-title" id="pain-title">Когда красота<br/>отнимает время,<br/>а не <em>дарит уверенность</em></h2>
+            </div>
+            <div className="pain-grid">
+              {[
+                { icon: "⏰", title: "40 минут на макияж каждое утро", desc: "Стрелки, тушь, брови — и всё равно к вечеру это сползает" },
+                { icon: "😔", title: "Лицо выглядит уставшим", desc: "Выспалась, а тональник всё равно не скрывает то, что хочется скрыть" },
+                { icon: "😬", title: "Мастер сделал не то", desc: "Уходишь недовольной и месяцами ждёшь, пока всё отрастёт обратно" },
+                { icon: "💸", title: "Деньги на косметику улетают", desc: "Купила тушь за 3000, она держится 3 часа — и так по кругу" },
+                { icon: "🔍", title: "Не понимаешь, что подойдёт именно тебе", desc: "То, что красиво у подруги, тебе почему-то не идёт" },
+                { icon: "🪞", title: "Хочется просто нравиться себе", desc: "Смотреть в зеркало и думать: «Да, вот это — я»" },
+              ].map((c) => (
+                <div className="pain-card fade-in" key={c.title}>
+                  <div className="pain-card__icon">{c.icon}</div>
+                  <div className="pain-card__text">
+                    <strong>{c.title}</strong>
+                    {c.desc}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="pain-cta fade-in">
+              <p>Ты заслуживаешь лучшего. Это не про дорогую косметику —<br/>это про правильные руки и правильный подход.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* ABOUT */}
+        <section className="section" aria-labelledby="about-title">
+          <div className="container--wide">
+            <div className="about-grid">
+              <div className="reveal-up">
+                <div className="about-image-wrap">
+                  <img src="https://picsum.photos/seed/beauty-master/500/667" alt="Светлана — мастер студии Портрет" width="500" height="667" loading="lazy"/>
+                  <div className="about-quote">
+                    <p>Мой подход — не просто процедура. Это результат, который ты видишь каждое утро.</p>
+                    <cite>— Светлана, основатель студии Портрет</cite>
+                  </div>
+                </div>
+              </div>
+              <div className="fade-in">
+                <p className="section-eyebrow">О студии</p>
+                <h2 className="section-title" id="about-title">Студия Портрет —<br/>это <em>другой уровень</em></h2>
+                <p className="section-subtitle">Мы не делаем «как все». Перед каждой процедурой — диагностика формы лица, состояния кожи и образа жизни. Потому что ресницы, которые идут модели из Москвы, могут совсем не подойти тебе.</p>
+                <div className="about-advantages">
                   {[
-                    { icon: "Phone", text: "+7 (999) 000-00-00" },
-                    { icon: "MessageCircle", text: "WhatsApp / Telegram" },
-                    { icon: "MapPin", text: "г. Москва, ул. Примерная, 1" },
-                    { icon: "Clock", text: "Пн–Вс: 9:00 – 21:00" },
-                  ].map((c, i) => (
-                    <div key={i} className="flex items-center gap-4">
-                      <div
-                        className="w-8 h-8 flex items-center justify-center flex-shrink-0"
-                        style={{ color: "var(--gold)", border: "1px solid hsl(38 30% 22%)" }}
-                      >
-                        <Icon name={c.icon} size={14} />
+                    { title: "Сертифицированный косметолог-эстетист", desc: "Образование и практика — не курсы выходного дня" },
+                    { title: "Индивидуальный подбор техник и форм", desc: "Под твой тип лица, кожи и образ жизни" },
+                    { title: "Только проверенные профессиональные материалы", desc: "Никакого оптового Китая — только то, что работает" },
+                    { title: "Ты здесь главная, а не следующий номер очереди", desc: "Атмосфера заботы, а не конвейера" },
+                  ].map((a) => (
+                    <div className="advantage" key={a.title}>
+                      <div className="advantage__dot"></div>
+                      <div className="advantage__text">
+                        <strong>{a.title}</strong>
+                        {a.desc}
                       </div>
-                      <span style={{ color: "hsl(40 15% 68%)", fontSize: "0.95rem" }}>{c.text}</span>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div
-                style={{
-                  border: "1px solid var(--gold)",
-                  padding: "1.5rem 2rem",
-                  backgroundColor: "rgba(200, 169, 110, 0.05)",
-                }}
-              >
-                <div className="section-label mb-3" style={{ fontSize: "0.6rem" }}>Первый визит</div>
-                <p className="font-display text-xl mb-2" style={{ color: "var(--gold-light)", fontWeight: 400 }}>
-                  Диагностика кожи — в подарок
+        {/* SERVICES */}
+        <section className="services-block section" id="services" aria-labelledby="services-title">
+          <div className="container">
+            <div className="section-header fade-in">
+              <p className="section-eyebrow">Услуги</p>
+              <h2 className="section-title" id="services-title">Что мы делаем<br/>с твоим взглядом и <em>кожей</em></h2>
+            </div>
+            <div className="services-tabs" role="tablist">
+              {TABS.map((t) => (
+                <button
+                  key={t.key}
+                  className={`tab-btn${activeTab === t.key ? " active" : ""}`}
+                  role="tab"
+                  aria-selected={activeTab === t.key}
+                  onClick={() => setActiveTab(t.key)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            <div className="services-grid">
+              {SERVICES[activeTab].map((s) => (
+                <div className="service-card fade-in" key={s.name}>
+                  <div className="service-card__tag">{s.tag}</div>
+                  <div className="service-card__name">{s.name}</div>
+                  <div className="service-card__result">
+                    {s.result}<strong>{s.resultBold}</strong>
+                  </div>
+                  <div className="service-card__price">
+                    {s.price}
+                    {s.priceSub && <span>{s.priceSub}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* GALLERY */}
+        <section className="gallery-block section--sm" aria-labelledby="gallery-title">
+          <div className="container">
+            <div className="section-header fade-in">
+              <p className="section-eyebrow">Результаты</p>
+              <h2 className="section-title" id="gallery-title">Говорят <em>результаты,</em><br/>не слова</h2>
+              <p className="section-subtitle">Реальные работы, реальные клиентки. Никакой обработки — только честный результат.</p>
+            </div>
+          </div>
+          <div className="container--wide">
+            <div className="gallery-grid">
+              <div className="gallery-item gallery-item--large reveal-up">
+                <img src="https://picsum.photos/seed/lashes-hero/400/600" alt="Наращивание ресниц — до и после" width="400" height="600" loading="lazy"/>
+                <div className="gallery-item__label">Ресницы · Объём 3D</div>
+              </div>
+              {[
+                { seed: "brows-arch", alt: "Архитектура бровей", label: "Архитектура бровей" },
+                { seed: "face-glow", alt: "Уход за лицом — результат", label: "Гидропилинг" },
+                { seed: "lamination", alt: "Ламинирование ресниц", label: "Ламинирование" },
+                { seed: "brow-lam", alt: "Долговременная укладка бровей", label: "Укладка бровей" },
+                { seed: "massage-face", alt: "Скульптурный массаж лица", label: "Скульптурный массаж" },
+                { seed: "lash-classic", alt: "Классическое наращивание ресниц", label: "Ресницы · Классика" },
+              ].map((g) => (
+                <div className="gallery-item fade-in" key={g.seed}>
+                  <img src={`https://picsum.photos/seed/${g.seed}/400/530`} alt={g.alt} width="400" height="530" loading="lazy"/>
+                  <div className="gallery-item__label">{g.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* REVIEWS */}
+        <section className="reviews-block section" aria-labelledby="reviews-title">
+          <div className="container">
+            <div className="section-header fade-in">
+              <p className="section-eyebrow">Отзывы</p>
+              <h2 className="section-title" id="reviews-title">Что говорят<br/><em>клиентки</em> Портрета</h2>
+            </div>
+            <div className="reviews-grid">
+              {[
+                { init: "А", name: "Анастасия, 29 лет", proc: "Архитектура бровей", text: "Первый раз в жизни ушла от мастера довольной на 100%. Светлана подобрала форму бровей, которую я искала 3 года. Теперь хожу только сюда!" },
+                { init: "М", name: "Марина, 36 лет", proc: "Скульптурный массаж", text: "Сделала буккальный массаж — думала, буду выглядеть как после драки. А вышла как после недельного отдыха. Теперь хожу каждые 3 недели." },
+                { init: "О", name: "Ольга, 31 год", proc: "Наращивание ресниц", text: "Наращивала ресницы в разных местах — нигде не держались дольше 2 недель. У Светланы стоят 4 недели без потерь. Наконец-то нашла своего мастера!" },
+                { init: "Е", name: "Екатерина, 34 года", proc: "Гидропилинг", text: "Пришла на гидропилинг первый раз в жизни — боялась красноты и шелушения. Ничего! Кожа просто засияла. Теперь делаю курс раз в 3 недели." },
+                { init: "Н", name: "Наталья, 27 лет", proc: "Долговременная укладка бровей", text: "Ламинирование бровей — лучшее, что я сделала! Утром просто умылась и уже красивая. Экономлю 20 минут каждое утро. Спасибо Светлане!" },
+                { init: "И", name: "Ирина, 41 год", proc: "Комплексный уход", text: "Обращаюсь уже больше года. Каждый раз чувствую себя как на отдыхе — атмосфера, чай, внимание к деталям. Результат всегда превышает ожидания." },
+              ].map((r) => (
+                <div className="review-card fade-in" key={r.name}>
+                  <div className="review-card__stars">★★★★★</div>
+                  <p className="review-card__text">{r.text}</p>
+                  <div className="review-card__author">
+                    <div className="review-card__avatar">{r.init}</div>
+                    <div>
+                      <div className="review-card__name">{r.name}</div>
+                      <div className="review-card__procedure">{r.proc}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="reviews-platforms fade-in">
+              <span style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)" }}>Читать все отзывы:</span>
+              <a href="#" className="platform-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                Яндекс.Карты
+              </a>
+              <a href="#" className="platform-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                2ГИС
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* OFFER */}
+        <section className="offer-block section" aria-labelledby="offer-title">
+          <div className="container">
+            <div className="offer-inner">
+              <div className="fade-in">
+                <p className="offer-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  Специально для первого визита
                 </p>
-                <p style={{ color: "hsl(40 10% 55%)", fontSize: "0.85rem", lineHeight: 1.6 }}>
-                  При записи на любую процедуру новый клиент получает персональную диагностику кожи бесплатно.
-                </p>
+                <h2 className="offer-title" id="offer-title">Запишись сегодня<br/>и получи <em>подарок</em></h2>
+                <ul className="offer-list">
+                  <li>Бесплатная экспресс-диагностика кожи лица к любой процедуре</li>
+                  <li>Индивидуальная консультация по уходу домой</li>
+                  <li>Подбор оптимальной программы процедур под твои задачи</li>
+                </ul>
+              </div>
+              <div className="fade-in">
+                <div className="offer-card">
+                  <span className="offer-card__gift">🎁</span>
+                  <div className="offer-card__title">Диагностика кожи лица</div>
+                  <p className="offer-card__desc">Мастер оценит состояние кожи, тип, проблемные зоны и подберёт процедуры, которые дадут максимальный результат именно тебе.</p>
+                  <div className="offer-card__value">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                    Стоимость 500 ₽ — в подарок при записи
+                  </div>
+                  <button className="btn-primary" style={{ width: "100%", justifyContent: "center" }} onClick={() => scrollTo("cta")}>
+                    Записаться и получить подарок
+                  </button>
+                  <p className="offer-card__limit">⏳ Ограниченное количество мест в месяц</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* CTA */}
+        <section className="cta-section section--sm" id="cta" aria-labelledby="cta-title">
+          <div className="container">
+            <div className="cta-grid">
+              <div className="fade-in">
+                <h2 className="cta-title" id="cta-title">Запишись на процедуру<br/><em>прямо сейчас</em></h2>
+                <p className="cta-subtitle">Студия Портрет, Владивосток · Работаем по записи: пн–вс, 9:00–21:00</p>
+                <p className="cta-info">Ответим в течение 15 минут</p>
+              </div>
+              <div className="cta-buttons fade-in">
+                <a href="https://t.me/portret_vlad" className="btn-tg" target="_blank" rel="noopener noreferrer">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.269c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.952z"/></svg>
+                  Написать в Telegram
+                </a>
+                <a href="tel:+74232000000" className="btn-call">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  Позвонить
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* FOOTER */}
-      <footer
-        style={{
-          borderTop: "1px solid hsl(30 15% 14%)",
-          backgroundColor: "var(--dark-bg)",
-          padding: "2rem",
-          textAlign: "center",
-        }}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div className="font-display text-2xl tracking-widest" style={{ color: "var(--gold)" }}>LUMIÈRE</div>
-          <p style={{ color: "hsl(40 10% 40%)", fontSize: "0.75rem", letterSpacing: "0.1em" }}>
-            Студия красоты
-            <span className="ornament">✦</span>
-            Персональный уход за кожей
-          </p>
-          <p style={{ color: "hsl(40 10% 32%)", fontSize: "0.7rem" }}>© 2024 Все права защищены</p>
+      <footer className="footer">
+        <div className="container--wide">
+          <div className="footer__inner">
+            <div>
+              <div className="footer__brand-name">Портрет</div>
+              <p className="footer__brand-desc">Студия эстетики лица и взгляда во Владивостоке. Наращивание ресниц, брови и уходовые процедуры.</p>
+            </div>
+            <div>
+              <div className="footer__heading">Услуги</div>
+              <ul className="footer__links" role="list">
+                {["Наращивание ресниц", "Ламинирование", "Архитектура бровей", "Уход за лицом"].map((l) => (
+                  <li key={l}><a href="#services" onClick={(e) => { e.preventDefault(); scrollTo("services"); }}>{l}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <div className="footer__heading">Контакты</div>
+              <ul className="footer__links" role="list">
+                <li><a href="tel:+74232000000">+7 (423) 200-00-00</a></li>
+                <li><a href="https://t.me/portret_vlad" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Яндекс.Карты</a></li>
+              </ul>
+            </div>
+            <div>
+              <div className="footer__heading">Адрес</div>
+              <ul className="footer__links" role="list">
+                <li style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", lineHeight: 1.6 }}>г. Владивосток<br/>По записи: пн–вс<br/>9:00 — 21:00</li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer__bottom">
+            <span>© 2026 Студия Портрет. Все права защищены.</span>
+            <span>Наращивание ресниц · Брови · Уход за лицом · Владивосток</span>
+          </div>
         </div>
       </footer>
-    </div>
+
+      {/* STICKY CTA MOBILE */}
+      <div className="sticky-cta" role="complementary">
+        <div className="sticky-cta__text">
+          <strong>Записаться сейчас</strong>
+          Ответим за 15 минут
+        </div>
+        <button className="btn-primary" style={{ padding: "var(--space-3) var(--space-5)", fontSize: "var(--text-xs)" }} onClick={() => scrollTo("cta")}>
+          Записаться
+        </button>
+      </div>
+    </>
   );
 }
