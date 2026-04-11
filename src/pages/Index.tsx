@@ -333,7 +333,7 @@ export default function Index() {
             </div>
             <div>
               <div className="hero__image-wrap">
-                <img src="https://picsum.photos/seed/beauty-portrait/600/750" alt="Студия Портрет — красота и уход" width="600" height="750" loading="eager"/>
+                <img src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/82f11b08-44f2-40ae-9e9e-670045418e66.jpg" alt="Студия Портрет — красота и уход" width="600" height="750" loading="eager"/>
                 <div className="hero__badge">
                   <span className="hero__badge-icon">⭐</span>
                   <div className="hero__badge-text">
@@ -399,7 +399,7 @@ export default function Index() {
             <div className="about-grid">
               <div className="fade-in">
                 <div className="about-image-wrap">
-                  <img src="https://picsum.photos/seed/master-svetlana/500/600" alt="Мастер студии Портрет" width="500" height="600" loading="lazy"/>
+                  <img src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/d5baf97c-7f1b-4102-bcf2-522aca5993dd.jpg" alt="Мастер студии Портрет" width="500" height="600" loading="lazy"/>
                 </div>
               </div>
               <div className="fade-in">
@@ -493,19 +493,19 @@ export default function Index() {
           <div className="container--wide">
             <div className="gallery-grid">
               <div className="gallery-item gallery-item--large reveal-up">
-                <img src="https://picsum.photos/seed/lashes-hero/400/600" alt="Наращивание ресниц — до и после" width="400" height="600" loading="lazy"/>
+                <img src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/cc412563-a180-47e3-b58e-c062e466e2bb.jpg" alt="Наращивание ресниц — до и после" width="400" height="600" loading="lazy"/>
                 <div className="gallery-item__label">Ресницы · Объём 3D</div>
               </div>
               {[
-                { seed: "brows-arch", alt: "Архитектура бровей", label: "Архитектура бровей" },
-                { seed: "face-glow", alt: "Уход за лицом — результат", label: "Гидропилинг" },
-                { seed: "lamination", alt: "Ламинирование ресниц", label: "Ламинирование" },
-                { seed: "brow-lam", alt: "Долговременная укладка бровей", label: "Укладка бровей" },
-                { seed: "massage-face", alt: "Скульптурный массаж лица", label: "Скульптурный массаж" },
-                { seed: "lash-classic", alt: "Классическое наращивание ресниц", label: "Ресницы · Классика" },
+                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/1d0e351e-599a-4567-931d-f50bdb310108.jpg", alt: "Архитектура бровей", label: "Архитектура бровей" },
+                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/c3a39658-5dbd-443c-ae5a-83ccbfd007ac.jpg", alt: "Уход за лицом — результат", label: "Уход за лицом" },
+                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/73596463-dd8f-4910-a990-fd628d9b51e9.jpg", alt: "Ламинирование ресниц", label: "Ламинирование" },
+                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/64001fe5-e114-419d-8f94-58108d35079f.jpg", alt: "Долговременная укладка бровей", label: "Укладка бровей" },
+                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/095bbe61-f0d8-4a50-8463-eb9b95686b06.jpg", alt: "Скульптурный массаж лица", label: "Скульптурный массаж" },
+                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/3ae45e6c-d4bb-46ab-938d-3c384062d757.jpg", alt: "Классическое наращивание ресниц", label: "Ресницы · Классика" },
               ].map((g) => (
-                <div className="gallery-item fade-in" key={g.seed}>
-                  <img src={`https://picsum.photos/seed/${g.seed}/400/530`} alt={g.alt} width="400" height="530" loading="lazy"/>
+                <div className="gallery-item fade-in" key={g.src}>
+                  <img src={g.src} alt={g.alt} width="400" height="530" loading="lazy"/>
                   <div className="gallery-item__label">{g.label}</div>
                 </div>
               ))}
