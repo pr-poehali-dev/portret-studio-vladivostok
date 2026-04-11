@@ -497,7 +497,7 @@ export default function Index() {
                 <div className="gallery-item__label">Ресницы · Объём 3D</div>
               </div>
               {[
-                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/1d0e351e-599a-4567-931d-f50bdb310108.jpg", alt: "Архитектура бровей", label: "Архитектура бровей" },
+                { src: "https://cdn.poehali.dev/files/13f4f9a2-14ad-401e-86a1-c56baf3502a4.JPG", alt: "Архитектура бровей", label: "Архитектура бровей" },
                 { src: "https://cdn.poehali.dev/files/ecff2c40-91f9-476a-a7d9-7939e27e38b6.JPG", alt: "Уход за лицом — результат", label: "Уход за лицом" },
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/73596463-dd8f-4910-a990-fd628d9b51e9.jpg", alt: "Ламинирование ресниц", label: "Ламинирование" },
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/64001fe5-e114-419d-8f94-58108d35079f.jpg", alt: "Долговременная укладка бровей", label: "Укладка бровей" },
