@@ -2,27 +2,63 @@ import { useState, useEffect, useRef } from "react";
 import func2url from "../../backend/func2url.json";
 
 const CONTACT_URL = func2url.contact;
+const LOGO_SRC = "https://picsum.photos/seed/portret-logo/200/200";
 
-type TabKey = "lash" | "brow" | "face";
+type TabKey = "lash" | "brow" | "face" | "makeup";
 
-const SERVICES: Record<TabKey, { tag: string; name: string; result: string; resultBold: string; price: string; priceSub?: string }[]> = {
+type ServiceItem = {
+  tag: string;
+  name: string;
+  result: string;
+  resultBold: string;
+  price: string;
+  meta?: string;
+};
+
+const SERVICES: Record<TabKey, ServiceItem[]> = {
   lash: [
-    { tag: "Хит продаж", name: "Наращивание ресниц", result: "Классика, 2D/3D, голливудский объём. ", resultBold: "Выразительный взгляд 24/7 без туши — до 3–4 недель.", price: "от 2 500 ₽", priceSub: "в зависимости от техники" },
-    { tag: "Натуральность", name: "Ламинирование ресниц", result: "Стойкий изгиб и объём родных ресниц. ", resultBold: "Красота без наращивания на 4–6 недель.", price: "от 1 800 ₽", priceSub: "включая уход" },
-    { tag: "Уход", name: "Ботокс для ресниц", result: "Восстановление и питание изнутри. ", resultBold: "Живые, блестящие, плотные ресницы.", price: "от 1 500 ₽", priceSub: "рекомендуется курс" },
-    { tag: "Быстро", name: "Окрашивание ресниц", result: "Насыщенный стойкий цвет. ", resultBold: "Выразительность без туши — до 3 недель.", price: "от 800 ₽" },
+    { tag: "Быстро", name: "Экспресс-наращивание", result: "Готовый выразительный взгляд за короткое время. ", resultBold: "Идеально перед событием.", price: "2 900 ₽", meta: "⏱ 1 час 15 минут" },
+    { tag: "Классика", name: "Классическое наращивание", result: "Один волосок — одна ресница. ", resultBold: "Натуральный выразительный взгляд до 3–4 недель.", price: "2 700 ₽", meta: "⏱ 1 час 45 минут" },
+    { tag: "Уголки", name: "Наращивание Уголки", result: "Эффект распахнутого взгляда с акцентом на внешние уголки. ", resultBold: "Лёгко и женственно.", price: "1 800 ₽", meta: "⏱ 1 час" },
+    { tag: "Объём", name: "Тройной объём", result: "3D-техника для насыщенного пышного взгляда. ", resultBold: "Объём и драматичность.", price: "3 500 ₽", meta: "⏱ 2 часа 15 минут" },
+    { tag: "Хит продаж", name: "Голливудский объём", result: "Максимально пышный роскошный взгляд. ", resultBold: "Как у звёзд — без туши 24/7.", price: "4 000 ₽", meta: "⏱ 2 часа 40 минут" },
+    { tag: "Баланс", name: "Полуторный объём", result: "Золотая середина между классикой и объёмом. ", resultBold: "Естественность + пышность.", price: "2 900 ₽", meta: "⏱ 1 час 50 минут" },
+    { tag: "Неполное", name: "Не полное наращивание", result: "Лёгкое наращивание для акцента. ", resultBold: "Идеально для первого знакомства с процедурой.", price: "2 000 ₽", meta: "⏱ 1 час" },
+    { tag: "Впервые", name: "Пробное наращивание", result: "Не полное наращивание для новых клиентов. ", resultBold: "Попробуй без лишних трат.", price: "1 800 ₽", meta: "⏱ 1 час" },
+    { tag: "Поддержка", name: "Коррекция наращённых ресниц", result: "Восстановление и обновление наращённых ресниц. ", resultBold: "Взгляд как после первого раза.", price: "1 800 ₽", meta: "⏱ 1 час" },
+    { tag: "Натуральность", name: "Ламинирование ресниц", result: "Стойкий изгиб и объём родных ресниц. ", resultBold: "Красота без наращивания до 6 недель.", price: "от 2 700 ₽", meta: "⏱ 1 час 30 минут" },
+    { tag: "Комплекс", name: "Ламинирование ресниц и бровей", result: "Идеальные ресницы и брови за один визит. ", resultBold: "Экономия времени и денег.", price: "4 700 ₽", meta: "⏱ 2 часа 15 минут" },
+    { tag: "Быстро", name: "Окрашивание ресниц", result: "Насыщенный стойкий цвет. ", resultBold: "Выразительность без туши до 3 недель.", price: "800 ₽", meta: "⏱ 25 минут" },
+    { tag: "Снятие", name: "Снятие наращённых ресниц", result: "Бережное профессиональное снятие без вреда для родных ресниц.", resultBold: "", price: "500 ₽", meta: "⏱ 20 минут" },
   ],
   brow: [
-    { tag: "Трансформация", name: "Архитектура бровей", result: "Форма, которая меняет лицо. ", resultBold: "Лицо выглядит моложе и выразительнее без грамма макияжа.", price: "от 1 200 ₽" },
-    { tag: "Популярно", name: "Долговременная укладка", result: "Идеальные брови с утра до вечера. ", resultBold: "Ухоженный вид на 4–6 недель.", price: "от 2 000 ₽" },
-    { tag: "Регулярно", name: "Коррекция + окрашивание", result: "Чёткая форма и насыщенный цвет. ", resultBold: "Результат без карандаша на 3 недели.", price: "от 1 000 ₽" },
+    { tag: "Трансформация", name: "Укладка + Архитектура бровей", result: "Долговременная укладка с полным оформлением формы. ", resultBold: "Лицо моложе без макияжа до 6 недель.", price: "2 700 ₽", meta: "⏱ 1 час 20 минут" },
+    { tag: "Популярно", name: "Укладка с окрашиванием", result: "Стойкая форма и насыщенный цвет. ", resultBold: "Идеальные брови с утра до вечера.", price: "2 400 ₽", meta: "⏱ 1 час" },
+    { tag: "Укладка", name: "Долговременная укладка бровей", result: "Фиксация формы и направления волосков. ", resultBold: "Ухоженные брови без усилий до 6 недель.", price: "1 800 ₽", meta: "⏱ 40 минут" },
+    { tag: "Для мужчин", name: "Мужская коррекция бровей", result: "Аккуратные ухоженные брови для мужчин. ", resultBold: "Естественно и стильно.", price: "1 000 ₽", meta: "⏱ 30 минут" },
+    { tag: "Коррекция", name: "Коррекция бровей (пинцет)", result: "Точное оформление формы пинцетом. ", resultBold: "Чёткая линия и аккуратность.", price: "600 ₽", meta: "⏱ 15 минут" },
+    { tag: "Коррекция", name: "Коррекция (воск + пинцет)", result: "Комбинированное оформление для идеальной чистоты контура.", resultBold: "", price: "800 ₽", meta: "⏱ 20 минут" },
+    { tag: "Цвет", name: "Окрашивание бровей краской", result: "Насыщенный стойкий цвет. ", resultBold: "Выразительные брови без карандаша.", price: "800 ₽", meta: "⏱ 20 минут" },
+    { tag: "Депиляция", name: "Удаление волос на лице (1 зона)", result: "Бережное удаление нежелательных волосков на лице.", resultBold: "", price: "400 ₽", meta: "⏱ 15 минут" },
   ],
   face: [
-    { tag: "Без реабилитации", name: "Гидропилинг", result: "Глубокое очищение без боли и покраснений. ", resultBold: "Кожа как после отпуска — сразу после процедуры.", price: "от 3 500 ₽" },
-    { tag: "Лифтинг", name: "Скульптурный массаж", result: "Лифтинг без игл. ", resultBold: "Чёткий овал, снятие отёков — уже после первой процедуры.", price: "от 3 000 ₽" },
-    { tag: "Увлажнение", name: "Безынъекционная мезотерапия", result: "Гидратация в глубокие слои кожи. ", resultBold: "Эффект «напилась воды изнутри».", price: "от 2 500 ₽" },
-    { tag: "Сияние", name: "Химический пилинг", result: "AHA/BHA. Выравнивание текстуры и тона кожи. ", resultBold: "Ровный цвет, сужение пор, сияние.", price: "от 2 000 ₽" },
-    { tag: "Микротоки", name: "Аппаратный лифтинг", result: "Моделирование овала лица без инъекций. ", resultBold: "Видимый результат уже после первого сеанса.", price: "от 2 500 ₽" },
+    { tag: "Лифтинг", name: "Пилинг «Голливудский лифтинг»", result: "Моментальное сияние и выравнивание тона. ", resultBold: "Кожа как после профессиональной фотосессии.", price: "4 500 ₽", meta: "⏱ 45 минут" },
+    { tag: "Бережно", name: "Атравматичная чистка GiGi", result: "Глубокое очищение без боли и покраснений. ", resultBold: "Кожа чистая и сияющая — сразу после процедуры.", price: "3 700 ₽", meta: "⏱ 1 час 20 минут" },
+    { tag: "Глубоко", name: "Комбинированная чистка GiGi", result: "Максимально глубокое очищение. ", resultBold: "Для проблемной кожи и загрязнённых пор.", price: "4 000 ₽", meta: "⏱ 2 часа" },
+    { tag: "Пилинг", name: "Мультипилинг ACNON — GiGi", result: "Борьба с акне и постакне. ", resultBold: "Выравнивание текстуры, сужение пор.", price: "2 400 ₽", meta: "⏱ 30 минут" },
+    { tag: "Без игл", name: "Неинвазивная карбокситерапия", result: "Насыщение кожи кислородом изнутри. ", resultBold: "Лифтинг, тонус и сияние без инъекций.", price: "2 000 ₽", meta: "⏱ 40 минут" },
+    { tag: "Авторский", name: "Массаж по технике Ахабадзе", result: "Фирменный массаж для молодости и сияния кожи. ", resultBold: "Лифтинг, овал, свежесть — с первой процедуры.", price: "2 700 ₽", meta: "⏱ 1 час" },
+    { tag: "Royal", name: "Royal Contour: лифтинг + Гуаша", result: "Вакуумный лифтинг + скульптурирование Гуашей. ", resultBold: "Чёткий овал и снятие напряжения.", price: "3 500 ₽", meta: "⏱ 1 час" },
+    { tag: "Сияние", name: "«Внутреннее сияние» ESTER C — GiGi", result: "Витамин С + антиоксиданты для сияющей кожи. ", resultBold: "Ровный тон, свежесть, молодость.", price: "3 500 ₽", meta: "⏱ 1 час 15 минут" },
+    { tag: "Anti-age", name: "«ANTI-AGE» INTENSE — VAGHEGGI", result: "Интенсивное омоложение итальянскими препаратами. ", resultBold: "Упругость, лифтинг, молодость кожи.", price: "3 500 ₽", meta: "⏱ 1 час 15 минут" },
+    { tag: "Сияние", name: "«Сияние и лоск» BRIGHT FORMULA — VAGHEGGI", result: "Выравнивание тона и пигментации. ", resultBold: "Кожа светлеет, сияет, выглядит ухоженной.", price: "3 500 ₽", meta: "⏱ 1 час 15 минут" },
+    { tag: "Увлажнение", name: "«Глубокое увлажнение» REHYDRA — VAGHEGGI", result: "Интенсивное увлажнение для сухой и обезвоженной кожи. ", resultBold: "Эффект «напилась воды изнутри».", price: "3 500 ₽", meta: "⏱ 1 час 15 минут" },
+    { tag: "Для мужчин", name: "«Упругость и питание» ATYPICAL — VAGHEGGI", result: "Специальный уход для мужской кожи. ", resultBold: "Тонус, питание, свежий вид.", price: "3 500 ₽", meta: "⏱ 1 час 15 минут" },
+    { tag: "Бонус", name: "Руки принцессы", result: "Уходовая процедура для рук. ", resultBold: "Мягкость и ухоженность за 20 минут.", price: "800 ₽", meta: "⏱ 20 минут" },
+  ],
+  makeup: [
+    { tag: "Дневной", name: "Дневной макияж", result: "Лёгкий, естественный макияж для повседневного образа. ", resultBold: "Свежо, красиво, стильно.", price: "2 500 ₽", meta: "⏱ 1 час" },
+    { tag: "Быстро", name: "Express-макияж", result: "Быстрый профессиональный макияж. ", resultBold: "Красиво и аккуратно за 40 минут.", price: "2 000 ₽", meta: "⏱ 40 минут" },
   ],
 };
 
@@ -30,9 +66,33 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "lash", label: "👁 Ресницы" },
   { key: "brow", label: "🌿 Брови" },
   { key: "face", label: "✨ Уход за лицом" },
+  { key: "makeup", label: "💄 Макияж" },
 ];
 
-const ALL_SERVICES = ["Наращивание ресниц", "Ламинирование ресниц", "Ботокс для ресниц", "Окрашивание ресниц", "Архитектура бровей", "Долговременная укладка", "Коррекция + окрашивание", "Гидропилинг", "Скульптурный массаж", "Безынъекционная мезотерапия", "Химический пилинг", "Аппаратный лифтинг"];
+const EXTRA_EFFECTS = [
+  { name: "Эффект стрелочки", meta: "⏱ 20 минут", price: "+ 400 ₽" },
+  { name: "Цветные вставки", meta: "⏱ 20 минут", price: "+ 400 ₽" },
+  { name: "Эффект мокрых ресниц", meta: "⏱ 10 минут", price: "+ 400 ₽" },
+  { name: "Эффект Лучики", meta: "⏱ 20 минут", price: "+ 400 ₽" },
+];
+
+const ALL_SERVICES = [
+  "Экспресс-наращивание",
+  "Классическое наращивание",
+  "Голливудский объём",
+  "Ламинирование ресниц",
+  "Окрашивание ресниц",
+  "Укладка + Архитектура бровей",
+  "Долговременная укладка бровей",
+  "Коррекция бровей",
+  "Окрашивание бровей",
+  "Пилинг «Голливудский лифтинг»",
+  "Чистка лица",
+  "Массаж по технике Ахабадзе",
+  "Royal Contour",
+  "Дневной макияж",
+  "Express-макияж",
+];
 
 function ContactForm() {
   const [form, setForm] = useState({ name: "", phone: "", service: "", message: "" });
@@ -87,7 +147,7 @@ function ContactForm() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.269c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.952z"/></svg>
             Написать в Telegram
           </a>
-          <a href="tel:+74232000000" className="btn-call" style={{ width: "fit-content" }}>
+          <a href="tel:+79146934343" className="btn-call" style={{ width: "fit-content" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
             Позвонить
           </a>
@@ -222,21 +282,21 @@ export default function Index() {
       <nav className="nav">
         <div className="nav__inner">
           <a href="#" className="nav__logo" onClick={(e) => { e.preventDefault(); scrollTo("hero"); }}>
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="18" cy="18" r="17" stroke="currentColor" strokeWidth="1"/>
-              <path d="M10 14 Q18 8 26 14 Q26 22 18 27 Q10 22 10 14Z" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <circle cx="18" cy="17" r="3.5" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <line x1="18" y1="8" x2="18" y2="6" stroke="currentColor" strokeWidth="1"/>
-              <line x1="24" y1="10" x2="25.5" y2="8.5" stroke="currentColor" strokeWidth="1"/>
-              <line x1="12" y1="10" x2="10.5" y2="8.5" stroke="currentColor" strokeWidth="1"/>
-            </svg>
+            <img
+              src={LOGO_SRC}
+              alt="Студия Портрет"
+              className="nav__logo-img"
+              width="36"
+              height="36"
+              style={{ borderRadius: "50%", objectFit: "cover" }}
+            />
             <div>
               <div className="nav__logo-text">Портрет</div>
               <div className="nav__tagline">Студия эстетики</div>
             </div>
           </a>
           <div className="nav__actions">
-            <a href="tel:+74232000000" className="nav__phone">+7 (423) 200-00-00</a>
+            <a href="tel:+79146934343" className="nav__phone">+7 (914) 693-43-43</a>
             <button className="theme-toggle" onClick={toggleTheme} aria-label="Переключить тему">
               {theme === "dark" ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -316,37 +376,30 @@ export default function Index() {
               {[
                 { icon: "⏰", title: "40 минут на макияж каждое утро", desc: "Стрелки, тушь, брови — и всё равно к вечеру это сползает" },
                 { icon: "😔", title: "Лицо выглядит уставшим", desc: "Выспалась, а тональник всё равно не скрывает то, что хочется скрыть" },
-                { icon: "😬", title: "Мастер сделал не то", desc: "Уходишь недовольной и месяцами ждёшь, пока всё отрастёт обратно" },
-                { icon: "💸", title: "Деньги на косметику улетают", desc: "Купила тушь за 3000, она держится 3 часа — и так по кругу" },
-                { icon: "🔍", title: "Не понимаешь, что подойдёт именно тебе", desc: "То, что красиво у подруги, тебе почему-то не идёт" },
-                { icon: "🪞", title: "Хочется просто нравиться себе", desc: "Смотреть в зеркало и думать: «Да, вот это — я»" },
-              ].map((c) => (
-                <div className="pain-card fade-in" key={c.title}>
-                  <div className="pain-card__icon">{c.icon}</div>
-                  <div className="pain-card__text">
-                    <strong>{c.title}</strong>
-                    {c.desc}
-                  </div>
+                { icon: "🪞", title: "Брови и ресницы «никакие»", desc: "Без карандаша и туши чувствуешь себя бледной тенью себя же" },
+                { icon: "💸", title: "Деньги на косметику уходят, а результата нет", desc: "Новые тушь, сыворотки, кремы — а кожа всё равно не такая, какой хочется" },
+              ].map((p) => (
+                <div className="pain-card fade-in" key={p.title}>
+                  <div className="pain-card__icon">{p.icon}</div>
+                  <h3 className="pain-card__title">{p.title}</h3>
+                  <p className="pain-card__desc">{p.desc}</p>
                 </div>
               ))}
             </div>
-            <div className="pain-cta fade-in">
-              <p>Ты заслуживаешь лучшего. Это не про дорогую косметику —<br/>это про правильные руки и правильный подход.</p>
+            <div className="pain-solution fade-in">
+              <p className="pain-solution__text">Студия Портрет решает всё это <strong>за один визит</strong> — и ты уходишь красивой на 3–6 недель вперёд.</p>
+              <button className="btn-primary" onClick={() => scrollTo("cta")}>Записаться на консультацию</button>
             </div>
           </div>
         </section>
 
         {/* ABOUT */}
-        <section className="section" aria-labelledby="about-title">
-          <div className="container--wide">
+        <section className="about-block section" aria-labelledby="about-title">
+          <div className="container">
             <div className="about-grid">
-              <div className="reveal-up">
+              <div className="fade-in">
                 <div className="about-image-wrap">
-                  <img src="https://picsum.photos/seed/beauty-master/500/667" alt="Светлана — мастер студии Портрет" width="500" height="667" loading="lazy"/>
-                  <div className="about-quote">
-                    <p>Мой подход — не просто процедура. Это результат, который ты видишь каждое утро.</p>
-                    <cite>— Светлана, основатель студии Портрет</cite>
-                  </div>
+                  <img src="https://picsum.photos/seed/master-svetlana/500/600" alt="Мастер студии Портрет" width="500" height="600" loading="lazy"/>
                 </div>
               </div>
               <div className="fade-in">
@@ -402,13 +455,29 @@ export default function Index() {
                   <div className="service-card__result">
                     {s.result}<strong>{s.resultBold}</strong>
                   </div>
-                  <div className="service-card__price">
-                    {s.price}
-                    {s.priceSub && <span>{s.priceSub}</span>}
-                  </div>
+                  {s.meta && <div className="service-card__meta">{s.meta}</div>}
+                  <div className="service-card__price">{s.price}</div>
                 </div>
               ))}
             </div>
+
+            {activeTab === "lash" && (
+              <div style={{ marginTop: "var(--space-10)" }}>
+                <p className="section-eyebrow" style={{ marginBottom: "var(--space-6)" }}>
+                  Дополнительные эффекты{" "}
+                  <span style={{ fontStyle: "normal", opacity: 0.6 }}>(+к стоимости услуги)</span>
+                </p>
+                <div className="services-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
+                  {EXTRA_EFFECTS.map((e) => (
+                    <div className="service-card fade-in" key={e.name}>
+                      <div className="service-card__name">{e.name}</div>
+                      <div className="service-card__meta">{e.meta}</div>
+                      <div className="service-card__price">{e.price}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -540,13 +609,23 @@ export default function Index() {
         <div className="container--wide">
           <div className="footer__inner">
             <div>
-              <div className="footer__brand-name">Портрет</div>
-              <p className="footer__brand-desc">Студия эстетики лица и взгляда во Владивостоке. Наращивание ресниц, брови и уходовые процедуры.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", marginBottom: "var(--space-4)" }}>
+                <img
+                  src={LOGO_SRC}
+                  alt="Студия Портрет"
+                  className="footer__logo-img"
+                  width="40"
+                  height="40"
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                />
+                <div className="footer__brand-name">Портрет</div>
+              </div>
+              <p className="footer__brand-desc">Студия эстетики лица и взгляда во Владивостоке. Наращивание ресниц, брови, уходовые процедуры и макияж.</p>
             </div>
             <div>
               <div className="footer__heading">Услуги</div>
               <ul className="footer__links" role="list">
-                {["Наращивание ресниц", "Ламинирование", "Архитектура бровей", "Уход за лицом"].map((l) => (
+                {["Наращивание ресниц", "Ламинирование", "Архитектура бровей", "Уход за лицом", "Макияж"].map((l) => (
                   <li key={l}><a href="#services" onClick={(e) => { e.preventDefault(); scrollTo("services"); }}>{l}</a></li>
                 ))}
               </ul>
@@ -554,7 +633,7 @@ export default function Index() {
             <div>
               <div className="footer__heading">Контакты</div>
               <ul className="footer__links" role="list">
-                <li><a href="tel:+74232000000">+7 (423) 200-00-00</a></li>
+                <li><a href="tel:+79146934343">+7 (914) 693-43-43</a></li>
                 <li><a href="https://t.me/portret_vlad" target="_blank" rel="noopener noreferrer">Telegram</a></li>
                 <li><a href="#">Instagram</a></li>
                 <li><a href="#">Яндекс.Карты</a></li>
@@ -563,13 +642,21 @@ export default function Index() {
             <div>
               <div className="footer__heading">Адрес</div>
               <ul className="footer__links" role="list">
-                <li style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", lineHeight: 1.6 }}>г. Владивосток<br/>По записи: пн–вс<br/>9:00 — 21:00</li>
+                <li style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", lineHeight: 1.6 }}>
+                  г. Владивосток<br/>
+                  ул. Уборевича, д. 19, каб. 201<br/>
+                  По записи: пн–вс<br/>
+                  9:00 — 21:00
+                </li>
+                <li style={{ marginTop: "var(--space-3)" }}>
+                  <a href="https://go.2gis.com/portret_vlad" target="_blank" rel="noopener noreferrer">Открыть в 2ГИС</a>
+                </li>
               </ul>
             </div>
           </div>
           <div className="footer__bottom">
             <span>© 2026 Студия Портрет. Все права защищены.</span>
-            <span>Наращивание ресниц · Брови · Уход за лицом · Владивосток</span>
+            <span>Наращивание ресниц · Брови · Уход за лицом · Макияж · Владивосток</span>
           </div>
         </div>
       </footer>
