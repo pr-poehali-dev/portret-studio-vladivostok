@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import func2url from "../../backend/func2url.json";
+
+const CONTACT_URL = func2url.contact;
 
 type TabKey = "lash" | "brow" | "face";
 
@@ -28,6 +31,169 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "brow", label: "🌿 Брови" },
   { key: "face", label: "✨ Уход за лицом" },
 ];
+
+const ALL_SERVICES = ["Наращивание ресниц", "Ламинирование ресниц", "Ботокс для ресниц", "Окрашивание ресниц", "Архитектура бровей", "Долговременная укладка", "Коррекция + окрашивание", "Гидропилинг", "Скульптурный массаж", "Безынъекционная мезотерапия", "Химический пилинг", "Аппаратный лифтинг"];
+
+function ContactForm() {
+  const [form, setForm] = useState({ name: "", phone: "", service: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.phone.trim()) return;
+    setStatus("loading");
+    try {
+      const res = await fetch(CONTACT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setStatus("ok");
+        setForm({ name: "", phone: "", service: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "var(--space-4) var(--space-5)",
+    borderRadius: "var(--radius-lg)",
+    border: "1px solid var(--color-border)",
+    background: "var(--color-bg)",
+    color: "var(--color-text)",
+    fontSize: "var(--text-sm)",
+    outline: "none",
+    transition: "border-color var(--transition-interactive)",
+    fontFamily: "var(--font-body)",
+  };
+
+  return (
+    <div style={{ display: "grid", gap: "var(--space-12)", alignItems: "start" }} className="cta-grid">
+      <div className="fade-in">
+        <h2 className="cta-title" id="cta-title">Запишись на процедуру<br/><em>прямо сейчас</em></h2>
+        <p className="cta-subtitle" style={{ marginTop: "var(--space-4)" }}>Студия Портрет, Владивосток · Пн–вс, 9:00–21:00</p>
+        <p className="cta-info" style={{ marginTop: "var(--space-3)" }}>Ответим в течение 15 минут</p>
+        <div style={{ marginTop: "var(--space-8)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+          <a href="https://t.me/portret_vlad" className="btn-tg" target="_blank" rel="noopener noreferrer" style={{ width: "fit-content" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.269c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.952z"/></svg>
+            Написать в Telegram
+          </a>
+          <a href="tel:+74232000000" className="btn-call" style={{ width: "fit-content" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            Позвонить
+          </a>
+        </div>
+      </div>
+
+      <div className="fade-in" style={{ background: "var(--color-surface)", borderRadius: "var(--radius-xl)", border: "1px solid var(--color-border)", padding: "var(--space-8)" }}>
+        {status === "ok" ? (
+          <div style={{ textAlign: "center", padding: "var(--space-10) 0" }}>
+            <div style={{ fontSize: "3rem", marginBottom: "var(--space-4)" }}>✨</div>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontWeight: 300, color: "var(--color-text)", marginBottom: "var(--space-3)" }}>
+              Заявка принята!
+            </h3>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", lineHeight: 1.7 }}>
+              Мы свяжемся с тобой в течение 15 минут,<br/>чтобы подтвердить запись.
+            </p>
+            <button
+              style={{ marginTop: "var(--space-6)", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", textDecoration: "underline", background: "none", border: "none", cursor: "pointer" }}
+              onClick={() => setStatus("idle")}
+            >
+              Отправить ещё одну заявку
+            </button>
+          </div>
+        ) : (
+          <form ref={formRef} onSubmit={submit} noValidate style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+            <div>
+              <label style={{ display: "block", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em" }}>
+                Твоё имя *
+              </label>
+              <input
+                type="text"
+                placeholder="Как тебя зовут?"
+                value={form.name}
+                onChange={set("name")}
+                required
+                style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em" }}>
+                Телефон *
+              </label>
+              <input
+                type="tel"
+                placeholder="+7 (___) ___-__-__"
+                value={form.phone}
+                onChange={set("phone")}
+                required
+                style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em" }}>
+                Интересующая процедура
+              </label>
+              <select
+                value={form.service}
+                onChange={set("service")}
+                style={{ ...inputStyle, appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a6d63' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right var(--space-4) center", paddingRight: "var(--space-10)", cursor: "pointer" }}
+                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+              >
+                <option value="">Выбери услугу (необязательно)</option>
+                {ALL_SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em" }}>
+                Комментарий
+              </label>
+              <textarea
+                placeholder="Любые пожелания или вопросы..."
+                value={form.message}
+                onChange={set("message")}
+                rows={3}
+                style={{ ...inputStyle, resize: "none" }}
+                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+              />
+            </div>
+            {status === "error" && (
+              <p style={{ fontSize: "var(--text-xs)", color: "#c0392b" }}>
+                Что-то пошло не так. Напиши нам в Telegram или позвони.
+              </p>
+            )}
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={status === "loading"}
+              style={{ justifyContent: "center", opacity: status === "loading" ? 0.7 : 1 }}
+            >
+              {status === "loading" ? "Отправляем..." : "Записаться на процедуру"}
+            </button>
+            <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-faint)", textAlign: "center" }}>
+              Нажимая кнопку, ты соглашаешься на обработку персональных данных
+            </p>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function Index() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -356,26 +522,10 @@ export default function Index() {
           </div>
         </section>
 
-        {/* CTA */}
+        {/* CTA + FORM */}
         <section className="cta-section section--sm" id="cta" aria-labelledby="cta-title">
           <div className="container">
-            <div className="cta-grid">
-              <div className="fade-in">
-                <h2 className="cta-title" id="cta-title">Запишись на процедуру<br/><em>прямо сейчас</em></h2>
-                <p className="cta-subtitle">Студия Портрет, Владивосток · Работаем по записи: пн–вс, 9:00–21:00</p>
-                <p className="cta-info">Ответим в течение 15 минут</p>
-              </div>
-              <div className="cta-buttons fade-in">
-                <a href="https://t.me/portret_vlad" className="btn-tg" target="_blank" rel="noopener noreferrer">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.269c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.952z"/></svg>
-                  Написать в Telegram
-                </a>
-                <a href="tel:+74232000000" className="btn-call">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                  Позвонить
-                </a>
-              </div>
-            </div>
+            <ContactForm />
           </div>
         </section>
       </main>
