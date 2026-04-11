@@ -399,7 +399,7 @@ export default function Index() {
             <div className="about-grid">
               <div className="fade-in">
                 <div className="about-image-wrap">
-                  <img src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/bucket/245ec76c-7690-4440-a469-bfd70d8da464.jpg" alt="Светлана — мастер студии Портрет" width="500" height="600" loading="lazy"/>
+                  <img src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/bucket/e1b0db49-8629-4480-b33b-b94d0b1fd67e.jpg" alt="Светлана — мастер студии Портрет" width="500" height="600" loading="lazy"/>
                 </div>
               </div>
               <div className="fade-in">
