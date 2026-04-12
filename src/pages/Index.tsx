@@ -283,16 +283,16 @@ export default function Index() {
         <div className="nav__inner">
           <a href="#" className="nav__logo" onClick={(e) => { e.preventDefault(); scrollTo("hero"); }}>
             <img
-              src={LOGO_SRC}
+              src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/bucket/3abf15d7-ff8d-4cae-8612-b9ca7ae82beb.jpg"
               alt="Студия Портрет"
               className="nav__logo-img"
-              width="36"
-              height="36"
+              width="44"
+              height="44"
               style={{ borderRadius: "50%", objectFit: "cover" }}
             />
             <div>
               <div className="nav__logo-text">Портрет</div>
-              <div className="nav__tagline">Студия эстетики</div>
+              <div className="nav__tagline">Студия эстетики лица</div>
             </div>
           </a>
           <div className="nav__actions">
@@ -315,7 +315,7 @@ export default function Index() {
           <div className="hero__bg" aria-hidden="true"></div>
           <div className="hero__content">
             <div>
-              <p className="hero__eyebrow">Студия эстетики · Владивосток</p>
+              <p className="hero__eyebrow">Студия эстетики лица · Владивосток</p>
               <h1 className="hero__title" id="hero-title">
                 Люди замечают что-то другое в тебе.<br/>
                 Они просто не знают — <em>что именно.</em>
