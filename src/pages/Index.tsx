@@ -501,7 +501,7 @@ export default function Index() {
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/73596463-dd8f-4910-a990-fd628d9b51e9.jpg", alt: "Ламинирование ресниц", label: "Ламинирование" },
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/64001fe5-e114-419d-8f94-58108d35079f.jpg", alt: "Долговременная укладка бровей", label: "Укладка бровей" },
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/095bbe61-f0d8-4a50-8463-eb9b95686b06.jpg", alt: "Скульптурный массаж лица", label: "Скульптурный массаж" },
-                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/3ae45e6c-d4bb-46ab-938d-3c384062d757.jpg", alt: "Классическое наращивание ресниц", label: "Ресницы · Классика" },
+                { src: "https://cdn.poehali.dev/files/460d4f60-e64f-4eb6-a3ce-62fda75f441a.JPG", alt: "Классическое наращивание ресниц", label: "Ресницы · Классика" },
               ].map((g) => (
                 <div className="gallery-item fade-in" key={g.src}>
                   <img src={g.src} alt={g.alt} width="400" height="530" loading="lazy"/>
