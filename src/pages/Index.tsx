@@ -608,11 +608,11 @@ export default function Index() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", marginBottom: "var(--space-4)" }}>
                 <img
-                  src={LOGO_SRC}
+                  src="https://cdn.poehali.dev/files/d53a0118-9ca1-4209-a37f-9d8874515560.jpg"
                   alt="Студия Портрет"
                   className="footer__logo-img"
-                  width="40"
-                  height="40"
+                  width="48"
+                  height="48"
                   style={{ borderRadius: "50%", objectFit: "cover" }}
                 />
                 <div className="footer__brand-name">Портрет</div>
@@ -632,7 +632,7 @@ export default function Index() {
               <ul className="footer__links" role="list">
                 <li><a href="tel:+79146934343">+7 (914) 693-43-43</a></li>
                 <li><a href="https://t.me/portret_vlad" target="_blank" rel="noopener noreferrer">Telegram</a></li>
-                <li><a href="#">Instagram</a></li>
+
                 <li><a href="#">Яндекс.Карты</a></li>
               </ul>
             </div>
