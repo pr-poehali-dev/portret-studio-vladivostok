@@ -317,9 +317,8 @@ export default function Index() {
             <div>
               <p className="hero__eyebrow">Студия эстетики · Владивосток</p>
               <h1 className="hero__title" id="hero-title">
-                Ты просыпаешься<br/>
-                <em>красивой.</em><br/>
-                Каждый день.
+                Люди замечают что-то другое в тебе.<br/>
+                Они просто не знают — <em>что именно.</em>
               </h1>
               <p className="hero__subtitle">Без макияжа. Без лишних усилий. Наращивание ресниц, оформление бровей и уходовые процедуры, после которых хочется смотреться в зеркало.</p>
               <div className="hero__cta-group">
