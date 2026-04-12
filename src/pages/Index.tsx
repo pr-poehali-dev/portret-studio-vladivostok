@@ -546,11 +546,11 @@ export default function Index() {
             </div>
             <div className="reviews-platforms fade-in">
               <span style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)" }}>Читать все отзывы:</span>
-              <a href="#" className="platform-badge">
+              <a href="https://yandex.ru/maps/org/portret/142663856086/?ll=131.890946%2C43.119241&z=16" target="_blank" rel="noopener noreferrer" className="platform-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
                 Яндекс.Карты
               </a>
-              <a href="#" className="platform-badge">
+              <a href="https://2gis.ru/vladivostok/firm/70000001094594555?m=131.891029%2C43.1193%2F16" target="_blank" rel="noopener noreferrer" className="platform-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
                 2ГИС
               </a>
