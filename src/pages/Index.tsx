@@ -516,7 +516,7 @@ export default function Index() {
           <div className="container">
             <div className="section-header fade-in">
               <p className="section-eyebrow">Отзывы</p>
-              <h2 className="section-title" id="reviews-title">Что говорят<br/><em>клиентки</em> Портрета</h2>
+              <h2 className="section-title" id="reviews-title">Что говорят<br/><em>клиентки</em> студии Портрет</h2>
             </div>
             <div className="reviews-grid">
               {[
