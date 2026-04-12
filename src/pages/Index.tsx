@@ -633,7 +633,7 @@ export default function Index() {
                 <li><a href="tel:+79146934343">+7 (914) 693-43-43</a></li>
                 <li><a href="https://t.me/portret_vlad" target="_blank" rel="noopener noreferrer">Telegram</a></li>
 
-                <li><a href="#">Яндекс.Карты</a></li>
+                <li><a href="https://yandex.ru/maps/org/portret/142663856086/?ll=131.890946%2C43.119241&z=16" target="_blank" rel="noopener noreferrer">Яндекс.Карты</a></li>
               </ul>
             </div>
             <div>
@@ -646,7 +646,7 @@ export default function Index() {
                   9:00 — 21:00
                 </li>
                 <li style={{ marginTop: "var(--space-3)" }}>
-                  <a href="https://go.2gis.com/portret_vlad" target="_blank" rel="noopener noreferrer">Открыть в 2ГИС</a>
+                  <a href="https://2gis.ru/vladivostok/firm/70000001094594555?m=131.891029%2C43.1193%2F16" target="_blank" rel="noopener noreferrer">Открыть в 2ГИС</a>
                 </li>
               </ul>
             </div>
