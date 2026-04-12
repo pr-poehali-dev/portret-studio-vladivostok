@@ -500,7 +500,7 @@ export default function Index() {
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/bucket/c475e586-cb96-460e-9c89-73fdc7c6df66.jpeg", alt: "Уход за лицом — результат", label: "Уход за лицом" },
                 { src: "https://cdn.poehali.dev/files/1768b397-af72-4d43-837a-b38d8e6a2715.jpeg", alt: "Ламинирование ресниц", label: "Ламинирование" },
                 { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/64001fe5-e114-419d-8f94-58108d35079f.jpg", alt: "Долговременная укладка бровей", label: "Укладка бровей" },
-                { src: "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/095bbe61-f0d8-4a50-8463-eb9b95686b06.jpg", alt: "Скульптурный массаж лица", label: "Скульптурный массаж" },
+                { src: "https://cdn.poehali.dev/files/4ea36f48-f71b-4b6b-92a1-b5d076d3e992.jpeg", alt: "Пилинг Голливудский лифтинг", label: 'Пилинг "Голливудский лифтинг"' },
                 { src: "https://cdn.poehali.dev/files/460d4f60-e64f-4eb6-a3ce-62fda75f441a.JPG", alt: "Классическое наращивание ресниц", label: "Ресницы · Классика" },
               ].map((g) => (
                 <div className="gallery-item fade-in" key={g.src}>
