@@ -99,6 +99,7 @@ function ContactForm() {
   const [form, setForm] = useState({ name: "", phone: "", service: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [privacyModal, setPrivacyModal] = useState<"privacy" | "consent" | null>(null);
+  const [agreed, setAgreed] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
@@ -240,32 +241,40 @@ function ContactForm() {
                 Что-то пошло не так. Напиши нам в Telegram или позвони.
               </p>
             )}
+            <label style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-3)", cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                style={{ marginTop: "2px", width: "16px", height: "16px", flexShrink: 0, accentColor: "var(--color-accent)", cursor: "pointer" }}
+              />
+              <span style={{ fontSize: "var(--text-xs)", color: "var(--color-text-faint)", lineHeight: 1.6 }}>
+                Я соглашаюсь на{" "}
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setPrivacyModal("consent"); }}
+                  style={{ color: "var(--color-accent)", textDecoration: "underline", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "inherit" }}
+                >
+                  обработку персональных данных
+                </button>
+                {" "}и{" "}
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setPrivacyModal("privacy"); }}
+                  style={{ color: "var(--color-accent)", textDecoration: "underline", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "inherit" }}
+                >
+                  политику конфиденциальности
+                </button>
+              </span>
+            </label>
             <button
               type="submit"
               className="btn-primary"
-              disabled={status === "loading"}
-              style={{ justifyContent: "center", opacity: status === "loading" ? 0.7 : 1 }}
+              disabled={status === "loading" || !agreed}
+              style={{ justifyContent: "center", opacity: (status === "loading" || !agreed) ? 0.5 : 1, cursor: !agreed ? "not-allowed" : "pointer" }}
             >
               {status === "loading" ? "Отправляем..." : "Записаться на процедуру"}
             </button>
-            <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-faint)", textAlign: "center" }}>
-              Нажимая кнопку, ты соглашаешься на{" "}
-              <button
-                type="button"
-                onClick={() => setPrivacyModal("consent")}
-                style={{ color: "var(--color-accent)", textDecoration: "underline", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "inherit" }}
-              >
-                обработку персональных данных
-              </button>
-              {" "}и{" "}
-              <button
-                type="button"
-                onClick={() => setPrivacyModal("privacy")}
-                style={{ color: "var(--color-accent)", textDecoration: "underline", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "inherit" }}
-              >
-                политику конфиденциальности
-              </button>
-            </p>
           </form>
           <PrivacyModal
             open={privacyModal !== null}
