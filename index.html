@@ -33,6 +33,164 @@
 
     <meta name="pp-name" value="portret-studio-vladivostok">
       <script src="https://cdn.poehali.dev/intertnal/js/inspector-min.js"></script>
+
+    <!-- Schema.org: LocalBusiness + BeautySalon -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["BeautySalon", "LocalBusiness"],
+      "@id": "https://portret-studio-vladivostok.poehali.dev/#business",
+      "name": "Студия Портрет",
+      "description": "Студия эстетики лица и взгляда во Владивостоке. Наращивание ресниц, оформление бровей, уходовые процедуры для лица и макияж.",
+      "url": "https://portret-studio-vladivostok.poehali.dev/",
+      "telephone": "+79146934343",
+      "priceRange": "₽₽",
+      "image": "https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/files/c36902d4-e3f9-4c80-b52a-faeb0e9aba3f.jpg",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ул. Уборевича, д. 19, кабинет 201",
+        "addressLocality": "Владивосток",
+        "addressRegion": "Приморский край",
+        "postalCode": "690000",
+        "addressCountry": "RU"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 43.1332,
+        "longitude": 131.9113
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+          "opens": "09:00",
+          "closes": "21:00"
+        }
+      ],
+      "sameAs": [
+        "https://t.me/portret_vlad"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "500",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
+          "author": {"@type": "Person", "name": "Анастасия"},
+          "reviewBody": "Первый раз в жизни ушла от мастера довольной на 100%. Светлана подобрала форму бровей, которую я искала 3 года. Теперь хожу только сюда!"
+        },
+        {
+          "@type": "Review",
+          "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
+          "author": {"@type": "Person", "name": "Ольга"},
+          "reviewBody": "Наращивала ресницы в разных местах — нигде не держались дольше 2 недель. У Светланы стоят 4 недели без потерь. Наконец-то нашла своего мастера!"
+        },
+        {
+          "@type": "Review",
+          "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
+          "author": {"@type": "Person", "name": "Наталья"},
+          "reviewBody": "Ламинирование бровей — лучшее, что я сделала! Утром просто умылась и уже красивая. Экономлю 20 минут каждое утро."
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Услуги студии Портрет",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Наращивание и ламинирование ресниц",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Классическое наращивание ресниц"}, "price": "2700", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Голливудский объём ресниц"}, "price": "4000", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Тройной объём ресниц"}, "price": "3500", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Ламинирование ресниц"}, "price": "2700", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Экспресс-наращивание ресниц"}, "price": "2900", "priceCurrency": "RUB"}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Оформление бровей",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Укладка и архитектура бровей"}, "price": "2700", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Ламинирование бровей с окрашиванием"}, "price": "2400", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Долговременная укладка бровей"}, "price": "1800", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Коррекция бровей"}, "price": "600", "priceCurrency": "RUB"}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Уход за лицом",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Пилинг Голливудский лифтинг"}, "price": "4500", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Атравматичная чистка лица GiGi"}, "price": "3700", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Комбинированная чистка лица"}, "price": "4000", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Карбокситерапия лица"}, "price": "2000", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Массаж лица по технике Ахабадзе"}, "price": "2700", "priceCurrency": "RUB"}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Макияж",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Дневной макияж"}, "price": "2500", "priceCurrency": "RUB"},
+              {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Express-макияж"}, "price": "2000", "priceCurrency": "RUB"}
+            ]
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- Schema.org: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Студия Портрет Владивосток",
+          "item": "https://portret-studio-vladivostok.poehali.dev/"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Schema.org: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Сколько держится наращивание ресниц?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Наращивание ресниц в студии Портрет держится 3–4 недели. Коррекция рекомендуется раз в 3–4 недели."}
+        },
+        {
+          "@type": "Question",
+          "name": "Сколько стоит наращивание ресниц во Владивостоке?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Цены на наращивание ресниц в студии Портрет: классическое — от 2 700 ₽, объёмное — от 3 500 ₽, голливудский объём — 4 000 ₽."}
+        },
+        {
+          "@type": "Question",
+          "name": "Как записаться в студию Портрет?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Записаться можно онлайн на сайте или по телефону +7 (914) 693-43-43. Студия работает ежедневно с 9:00 до 21:00 по адресу: Владивосток, ул. Уборевича, д. 19, кабинет 201."}
+        },
+        {
+          "@type": "Question",
+          "name": "Сколько держится ламинирование бровей?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Ламинирование и долговременная укладка бровей держится до 6 недель."}
+        }
+      ]
+    }
+    </script>
   </head>
 
 <body>
