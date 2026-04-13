@@ -270,8 +270,8 @@ function ContactForm() {
             <button
               type="submit"
               className="btn-primary"
-              disabled={status === "loading" || !agreed}
-              style={{ justifyContent: "center", opacity: (status === "loading" || !agreed) ? 0.5 : 1, cursor: !agreed ? "not-allowed" : "pointer" }}
+              disabled={status === "loading" || !agreed || !form.name.trim() || !form.phone.trim()}
+              style={{ justifyContent: "center", opacity: (status === "loading" || !agreed || !form.name.trim() || !form.phone.trim()) ? 0.5 : 1, cursor: (!agreed || !form.name.trim() || !form.phone.trim()) ? "not-allowed" : "pointer" }}
             >
               {status === "loading" ? "Отправляем..." : "Записаться на процедуру"}
             </button>
