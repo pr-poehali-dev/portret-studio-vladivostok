@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import func2url from "../../backend/func2url.json";
+import PrivacyModal from "@/components/PrivacyModal";
 
 const CONTACT_URL = func2url.contact;
 const LOGO_SRC = "https://picsum.photos/seed/portret-logo/200/200";
@@ -97,6 +98,7 @@ const ALL_SERVICES = [
 function ContactForm() {
   const [form, setForm] = useState({ name: "", phone: "", service: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [privacyModal, setPrivacyModal] = useState<"privacy" | "consent" | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
@@ -172,6 +174,7 @@ function ContactForm() {
             </button>
           </div>
         ) : (
+          <>
           <form ref={formRef} onSubmit={submit} noValidate style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
             <div>
               <label style={{ display: "block", fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em" }}>
@@ -246,9 +249,30 @@ function ContactForm() {
               {status === "loading" ? "Отправляем..." : "Записаться на процедуру"}
             </button>
             <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-faint)", textAlign: "center" }}>
-              Нажимая кнопку, ты соглашаешься на обработку персональных данных
+              Нажимая кнопку, ты соглашаешься на{" "}
+              <button
+                type="button"
+                onClick={() => setPrivacyModal("consent")}
+                style={{ color: "var(--color-accent)", textDecoration: "underline", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "inherit" }}
+              >
+                обработку персональных данных
+              </button>
+              {" "}и{" "}
+              <button
+                type="button"
+                onClick={() => setPrivacyModal("privacy")}
+                style={{ color: "var(--color-accent)", textDecoration: "underline", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "inherit" }}
+              >
+                политику конфиденциальности
+              </button>
             </p>
           </form>
+          <PrivacyModal
+            open={privacyModal !== null}
+            type={privacyModal ?? "privacy"}
+            onClose={() => setPrivacyModal(null)}
+          />
+          </>
         )}
       </div>
     </div>
