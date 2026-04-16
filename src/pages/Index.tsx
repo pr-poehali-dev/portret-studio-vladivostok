@@ -365,7 +365,7 @@ export default function Index() {
             </div>
             <div>
               <div className="hero__image-wrap">
-                <img src="https://cdn.poehali.dev/files/6baa2a69-2bc3-472c-bf46-e60e410f3bd4.jpeg" alt="Студия Портрет — красота и уход" width="600" height="750" loading="eager"/>
+                <img src="https://cdn.poehali.dev/projects/d9c84571-cb98-4999-9a6f-9b954ebdb492/bucket/d6a9e99a-902d-4d7b-9987-b07593cb33c1.JPG" alt="Студия Портрет — красота и уход" width="600" height="750" loading="eager"/>
                 <div className="hero__badge">
                   <span className="hero__badge-icon">⭐</span>
                   <div className="hero__badge-text">
