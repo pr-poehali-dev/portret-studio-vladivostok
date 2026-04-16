@@ -337,25 +337,36 @@ button {
   position: absolute;
 }
 .hero__flower--1 {
-  width: 260px;
-  height: 260px;
-  top: -60px;
-  right: -60px;
+  width: 300px;
+  height: 300px;
+  top: -80px;
+  right: -70px;
   animation: flower-drift 18s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 16px rgba(236, 72, 153, 0.25));
 }
 .hero__flower--2 {
-  width: 160px;
-  height: 160px;
-  bottom: 80px;
-  left: -40px;
+  width: 200px;
+  height: 200px;
+  bottom: 60px;
+  left: -50px;
   animation: flower-drift 22s ease-in-out infinite alternate-reverse;
+  filter: drop-shadow(0 4px 12px rgba(244, 114, 182, 0.2));
 }
 .hero__flower--3 {
-  width: 100px;
-  height: 100px;
-  bottom: 30%;
-  right: 10%;
+  width: 120px;
+  height: 120px;
+  bottom: 28%;
+  right: 8%;
   animation: flower-drift 14s ease-in-out infinite alternate;
+  filter: drop-shadow(0 2px 8px rgba(251, 113, 133, 0.2));
+}
+.hero__flower--4 {
+  width: 90px;
+  height: 90px;
+  top: 15%;
+  left: 3%;
+  animation: flower-drift 19s ease-in-out infinite alternate-reverse;
+  filter: drop-shadow(0 2px 8px rgba(236, 72, 153, 0.18));
 }
 @keyframes flower-drift {
   from {
@@ -371,18 +382,20 @@ button {
   z-index: 0;
 }
 .section-flower--reviews-l {
-  width: 200px;
-  height: 200px;
-  top: -60px;
-  left: -60px;
+  width: 240px;
+  height: 240px;
+  top: -70px;
+  left: -70px;
   animation: flower-drift 20s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 14px rgba(244, 114, 182, 0.22));
 }
 .section-flower--reviews-r {
-  width: 140px;
-  height: 140px;
-  bottom: -40px;
-  right: -30px;
+  width: 170px;
+  height: 170px;
+  bottom: -50px;
+  right: -40px;
   animation: flower-drift 16s ease-in-out infinite alternate-reverse;
+  filter: drop-shadow(0 4px 12px rgba(251, 113, 133, 0.2));
 }
 
 /* ===== HERO ===== */
