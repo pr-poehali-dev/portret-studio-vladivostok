@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import func2url from "../../backend/func2url.json";
 import PrivacyModal from "@/components/PrivacyModal";
 import ReviewsSlider from "@/components/ReviewsSlider";
-import FlowerDecor, { FlowerDecorReviews } from "@/components/FlowerDecor";
+
 
 const CONTACT_URL = func2url.contact;
 const LOGO_SRC = "https://picsum.photos/seed/portret-logo/200/200";
@@ -348,7 +348,7 @@ export default function Index() {
         {/* HERO */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero__bg" aria-hidden="true"></div>
-          <FlowerDecor />
+
           <div className="hero__content">
             <div>
               <p className="hero__eyebrow">Студия эстетики лица · Владивосток</p>
@@ -549,7 +549,7 @@ export default function Index() {
 
         {/* REVIEWS */}
         <section className="reviews-block section" aria-labelledby="reviews-title" style={{ position: "relative", overflow: "hidden" }}>
-          <FlowerDecorReviews />
+
           <div className="container">
             <div className="section-header fade-in">
               <p className="section-eyebrow">Отзывы</p>
