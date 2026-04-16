@@ -326,6 +326,65 @@ button {
   color: var(--color-text-inverse);
 }
 
+/* ===== FLOWERS ===== */
+.hero__flowers {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero__flower {
+  position: absolute;
+}
+.hero__flower--1 {
+  width: 260px;
+  height: 260px;
+  top: -60px;
+  right: -60px;
+  animation: flower-drift 18s ease-in-out infinite alternate;
+}
+.hero__flower--2 {
+  width: 160px;
+  height: 160px;
+  bottom: 80px;
+  left: -40px;
+  animation: flower-drift 22s ease-in-out infinite alternate-reverse;
+}
+.hero__flower--3 {
+  width: 100px;
+  height: 100px;
+  bottom: 30%;
+  right: 10%;
+  animation: flower-drift 14s ease-in-out infinite alternate;
+}
+@keyframes flower-drift {
+  from {
+    transform: translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateY(18px) rotate(12deg);
+  }
+}
+.section-flower {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.section-flower--reviews-l {
+  width: 200px;
+  height: 200px;
+  top: -60px;
+  left: -60px;
+  animation: flower-drift 20s ease-in-out infinite alternate;
+}
+.section-flower--reviews-r {
+  width: 140px;
+  height: 140px;
+  bottom: -40px;
+  right: -30px;
+  animation: flower-drift 16s ease-in-out infinite alternate-reverse;
+}
+
 /* ===== HERO ===== */
 .hero {
   min-height: 100dvh;

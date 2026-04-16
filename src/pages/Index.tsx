@@ -347,6 +347,32 @@ export default function Index() {
         {/* HERO */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero__bg" aria-hidden="true"></div>
+          <div className="hero__flowers" aria-hidden="true">
+            <svg className="hero__flower hero__flower--1" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.18">
+                {[0,60,120,180,240,300].map(a => (
+                  <ellipse key={a} cx="60" cy="60" rx="10" ry="26" fill="#c0392b" transform={`rotate(${a} 60 60) translate(0 -18)`}/>
+                ))}
+                <circle cx="60" cy="60" r="10" fill="#d4860a"/>
+              </g>
+            </svg>
+            <svg className="hero__flower hero__flower--2" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.13">
+                {[0,45,90,135,180,225,270,315].map(a => (
+                  <ellipse key={a} cx="40" cy="40" rx="7" ry="18" fill="#e88080" transform={`rotate(${a} 40 40) translate(0 -14)`}/>
+                ))}
+                <circle cx="40" cy="40" r="7" fill="#d4860a"/>
+              </g>
+            </svg>
+            <svg className="hero__flower hero__flower--3" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.12">
+                {[0,60,120,180,240,300].map(a => (
+                  <ellipse key={a} cx="30" cy="30" rx="5" ry="14" fill="#c0392b" transform={`rotate(${a} 30 30) translate(0 -10)`}/>
+                ))}
+                <circle cx="30" cy="30" r="6" fill="#fce4e1"/>
+              </g>
+            </svg>
+          </div>
           <div className="hero__content">
             <div>
               <p className="hero__eyebrow">Студия эстетики лица · Владивосток</p>
@@ -546,7 +572,23 @@ export default function Index() {
         </section>
 
         {/* REVIEWS */}
-        <section className="reviews-block section" aria-labelledby="reviews-title">
+        <section className="reviews-block section" aria-labelledby="reviews-title" style={{ position: "relative", overflow: "hidden" }}>
+          <svg className="section-flower section-flower--reviews-l" aria-hidden="true" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.10">
+              {[0,60,120,180,240,300].map(a => (
+                <ellipse key={a} cx="50" cy="50" rx="8" ry="22" fill="#c0392b" transform={`rotate(${a} 50 50) translate(0 -16)`}/>
+              ))}
+              <circle cx="50" cy="50" r="9" fill="#d4860a"/>
+            </g>
+          </svg>
+          <svg className="section-flower section-flower--reviews-r" aria-hidden="true" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.09">
+              {[0,45,90,135,180,225,270,315].map(a => (
+                <ellipse key={a} cx="35" cy="35" rx="5" ry="15" fill="#e88080" transform={`rotate(${a} 35 35) translate(0 -12)`}/>
+              ))}
+              <circle cx="35" cy="35" r="6" fill="#d4860a"/>
+            </g>
+          </svg>
           <div className="container">
             <div className="section-header fade-in">
               <p className="section-eyebrow">Отзывы</p>
