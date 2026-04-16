@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import func2url from "../../backend/func2url.json";
 import PrivacyModal from "@/components/PrivacyModal";
 import ReviewsSlider from "@/components/ReviewsSlider";
+import FlowerDecor, { FlowerDecorReviews } from "@/components/FlowerDecor";
 
 const CONTACT_URL = func2url.contact;
 const LOGO_SRC = "https://picsum.photos/seed/portret-logo/200/200";
@@ -347,12 +348,7 @@ export default function Index() {
         {/* HERO */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero__bg" aria-hidden="true"></div>
-          <div className="hero__flowers" aria-hidden="true">
-            <img className="hero__flower hero__flower--1" src="https://images.unsplash.com/photo-1490750967868-88df5691cc53?w=500&auto=format&fit=crop" alt="" />
-            <img className="hero__flower hero__flower--2" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format&fit=crop" alt="" />
-            <img className="hero__flower hero__flower--3" src="https://images.unsplash.com/photo-1606041011872-596597976b25?w=300&auto=format&fit=crop" alt="" />
-            <img className="hero__flower hero__flower--4" src="https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=300&auto=format&fit=crop" alt="" />
-          </div>
+          <FlowerDecor />
           <div className="hero__content">
             <div>
               <p className="hero__eyebrow">Студия эстетики лица · Владивосток</p>
@@ -553,8 +549,7 @@ export default function Index() {
 
         {/* REVIEWS */}
         <section className="reviews-block section" aria-labelledby="reviews-title" style={{ position: "relative", overflow: "hidden" }}>
-          <img className="section-flower section-flower--reviews-l" aria-hidden="true" src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400&auto=format&fit=crop" alt="" />
-          <img className="section-flower section-flower--reviews-r" aria-hidden="true" src="https://images.unsplash.com/photo-1490750967868-88df5691cc53?w=300&auto=format&fit=crop" alt="" />
+          <FlowerDecorReviews />
           <div className="container">
             <div className="section-header fade-in">
               <p className="section-eyebrow">Отзывы</p>
